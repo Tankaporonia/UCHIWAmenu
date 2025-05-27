@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>焼鳥うちわ - メニュー (Yakitori Uchiwa - Menu)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif; /* Basic readable font */
+            background-color: #ffffff;
+            position: relative;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: "焼鳥うちわ 焼鳥うちわ 焼鳥うちわ 焼鳥うちわ 焼鳥うちわ 焼鳥うちわ 焼鳥うちわ 焼鳥うちわ 焼鳥うちわ 焼鳥うちわ 焼鳥うちわ 焼鳥うちわ 焼鳥うちわ 焼鳥うちわ 焼鳥うちわ 焼鳥うちわ 焼鳥うちわ 焼鳥うちわ";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200%; /* Ensure full coverage even with rotation */
+            height: 200%;
+            font-size: 4rem;
+            color: rgba(200, 200, 200, 0.05); /* Very subtle gray */
+            font-weight: bold;
+            z-index: -1;
+            transform: rotate(-15deg) translate(-25%, -25%); /* Rotate and adjust position */
+            pointer-events: none;
+            text-align: center;
+            line-height: 1.8;
+            overflow: hidden; /* Hide overflowing text */
+            white-space: normal; /* Allow text to wrap */
+            word-break: keep-all; /* Prevent awkward breaks */
+        }
+        .font-shodo {
+            font-family: 'Shippori Mincho B1', serif; /* A Google Font that has a calligraphic feel */
+            font-weight: 800; /* Bold for impact */
+        }
+        .gold-text {
+            color: #DAA520; /* Gold color */
+        }
+        .lantern-red {
+            color: #DC2626; /* Tailwind red-600 */
+        }
+        .lantern-bg {
+            background-color: #DC2626;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-button.active + .accordion-content {
+            max-height: 1000px; /* Adjust as needed */
+        }
+        .price-group-item {
+            border-bottom: 1px solid #e5e7eb; /* gray-200 */
+        }
+        .price-group-item:last-child {
+            border-bottom: none;
+        }
+        .lang-button {
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .lang-button.active {
+            background-color: #DAA520; /* Gold */
+            color: white;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #DAA520; /* Gold */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #b8860b; /* Darker Gold */
+        }
+        /* Add some lantern-like elements */
+        .header-lanterns::before {
+            content: '🏮'; /* Left lantern */
+            font-size: 1.5rem;
+            margin: 0 0.5rem;
+        }
+        .header-lanterns::after {
+            content: '🏮'; /* Right fan (うちわ) */
+            font-size: 1.5rem;
+            margin: 0 0.5rem;
+        }
+         @media (max-width: 640px) {
+            body::before {
+                font-size: 2.5rem; /* Smaller font for watermark on mobile */
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Shippori+Mincho+B1:wght@800&display=swap" rel="stylesheet">
+</head>
+<body class="bg-white text-gray-800">
+
+    <div id="app-container" class="max-w-2xl mx-auto bg-white shadow-lg min-h-screen">
+
+        <header class="py-4 px-6 sticky top-0 bg-white z-50 shadow-md">
+            <div class="flex justify-between items-center">
+                <h1 class="text-4xl font-shodo gold-text header-lanterns">
+                    <span data-translate-key="store_name_logo">焼鳥うちわ</span>
+                </h1>
+                <div class="flex space-x-1 border border-gray-300 rounded-lg p-0.5">
+                    <button onclick="switchLanguage('ja')" class="lang-button ja p-2 text-xs rounded-md" data-translate-key="lang_ja">日本語</button>
+                    <button onclick="switchLanguage('en')" class="lang-button en p-2 text-xs rounded-md" data-translate-key="lang_en">English</button>
+                    <button onclick="switchLanguage('ko')" class="lang-button ko p-2 text-xs rounded-md" data-translate-key="lang_ko">한국어</button>
+                    <button onclick="switchLanguage('zh')" class="lang-button zh p-2 text-xs rounded-md" data-translate-key="lang_zh">中文</button>
+                </div>
+            </div>
+        </header>
+
+        <section class="p-6 text-center">
+            <h2 class="text-2xl font-bold mb-2 lantern-red" data-translate-key="welcome_title">焼鳥うちわへようこそ！</h2>
+            <p class="text-gray-600" data-translate-key="welcome_message">本格的な炭火焼き鳥と心温まるおもてなしでお客様をお迎えします。このデジタルメニューで、お好みの料理やドリンクを簡単に見つけていただけます。</p>
+        </section>
+
+        <nav class="bg-gray-100 p-2 sticky top-[73px] z-40 shadow-sm">
+             <ul class="flex flex-wrap justify-center gap-2 text-sm">
+                <li><a href="#omakase" class="block px-3 py-1.5 text-gray-700 hover:bg-red-500 hover:text-white rounded-md transition-colors" data-translate-key="nav_omakase">おまかせ</a></li>
+                <li><a href="#food" class="block px-3 py-1.5 text-gray-700 hover:bg-red-500 hover:text-white rounded-md transition-colors" data-translate-key="nav_food">お食事</a></li>
+                <li><a href="#drinks" class="block px-3 py-1.5 text-gray-700 hover:bg-red-500 hover:text-white rounded-md transition-colors" data-translate-key="nav_drinks">お飲物</a></li>
+                <li><a href="#phrases" class="block px-3 py-1.5 text-gray-700 hover:bg-red-500 hover:text-white rounded-md transition-colors" data-translate-key="nav_phrases">役立つフレーズ</a></li>
+            </ul>
+        </nav>
+
+        <main class="p-4 md:p-6 space-y-8">
+
+            <section id="omakase" class="pt-16 -mt-16">
+                <h2 class="text-2xl font-bold mb-4 border-b-2 border-red-500 pb-2 lantern-red" data-translate-key="omakase_title">おまかせコース</h2>
+                <p class="text-gray-600 mb-4" data-translate-key="omakase_intro">料理長おすすめの串を厳選したお得なコースです。初めての方や、何を注文しようか迷っている方に最適です。</p>
+                <div id="omakase-items" class="space-y-3"></div>
+            </section>
+
+            <section id="food" class="pt-16 -mt-16">
+                <h2 class="text-2xl font-bold mb-4 border-b-2 border-red-500 pb-2 lantern-red" data-translate-key="food_title">お食事</h2>
+                
+                <div id="chicken-sashimi-items" class="mb-6">
+                    <h3 class="text-xl font-semibold my-3" data-translate-key="food_cat_chicken_sashimi">鶏刺</h3>
+                    <div class="space-y-3"></div>
+                </div>
+                <div id="a-la-carte-items" class="mb-6">
+                    <h3 class="text-xl font-semibold my-3" data-translate-key="food_cat_a_la_carte">一品</h3>
+                    <div class="space-y-3"></div>
+                </div>
+                
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold my-3" data-translate-key="food_cat_skewers">串物</h3>
+                    <p class="text-gray-600 mb-4" data-translate-key="skewers_intro">当店自慢の新鮮な鶏肉や旬の野菜を使った串焼きの数々。塩またはタレでお楽しみください。同じ価格帯の串はまとめて表示しています。</p>
+                    <div id="yakitori-skewers">
+                        <h4 class="text-lg font-medium mt-4 mb-2" data-translate-key="food_subcat_chicken_skewers">鶏串</h4>
+                        <div id="chicken-skewer-price-groups" class="space-y-2"></div>
+                    </div>
+                    <div id="vegetable-skewers" class="mt-4">
+                        <h4 class="text-lg font-medium mt-4 mb-2" data-translate-key="food_subcat_vegetable_skewers">野菜串</h4>
+                        <div id="vegetable-skewer-price-groups" class="space-y-2"></div>
+                    </div>
+                    <div id="special-skewers" class="mt-4">
+                         <h4 class="text-lg font-medium mt-4 mb-2" data-translate-key="food_subcat_special_skewers">変わり種串</h4>
+                        <div id="special-skewer-items" class="space-y-3"></div>
+                    </div>
+                </div>
+
+                <div id="rice-dishes-items" class="mb-6">
+                    <h3 class="text-xl font-semibold my-3" data-translate-key="food_cat_rice_dishes">ご飯物</h3>
+                    <div class="space-y-3"></div>
+                </div>
+            </section>
+
+            <section id="drinks" class="pt-16 -mt-16">
+                <h2 class="text-2xl font-bold mb-4 border-b-2 border-red-500 pb-2 lantern-red" data-translate-key="drinks_title">お飲物</h2>
+                <p class="text-gray-600 mb-4" data-translate-key="drinks_intro">お食事に合う様々なドリンクをご用意しています。ソフトドリンクは同じ価格帯でまとめて表示しています。</p>
+                <div id="soft-drinks-price-groups" class="mb-6">
+                    <h3 class="text-xl font-semibold my-3" data-translate-key="drinks_cat_soft_drinks">ソフトドリンク</h3>
+                     <div class="space-y-2"></div>
+                </div>
+                <div id="alcoholic-drinks-items" class="mb-6">
+                    <h3 class="text-xl font-semibold my-3" data-translate-key="drinks_cat_alcoholic_drinks">アルコール</h3>
+                    <div class="space-y-3"></div>
+                </div>
+            </section>
+
+            <section id="phrases" class="pt-16 -mt-16">
+                <h2 class="text-2xl font-bold mb-4 border-b-2 border-red-500 pb-2 lantern-red" data-translate-key="phrases_title">役立つフレーズ</h2>
+                <p class="text-gray-600 mb-4" data-translate-key="phrases_intro">ご注文やお会計の際に役立つ簡単な日本語フレーズです。スタッフとのコミュニケーションにお役立てください。</p>
+                <div class="space-y-3">
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="font-semibold">Kore o kudasai. (これをください。)</p>
+                        <p class="text-sm text-gray-500" data-translate-key="phrase_kore_o_kudasai">これをください / Can I have this?</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="font-semibold">Osusume wa nan desu ka? (おすすめは何ですか？)</p>
+                        <p class="text-sm text-gray-500" data-translate-key="phrase_osusume">おすすめは何ですか？ / What do you recommend?</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="font-semibold">Okaikei o onegaishimasu. (お会計をお願いします。)</p>
+                        <p class="text-sm text-gray-500" data-translate-key="phrase_okaikei">お会計をお願いします / Check, please.</p>
+                    </div>
+                     <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="font-semibold">[Allergen] nuki de onegaishimasu. ([アレルゲン]抜きでお願いします。)</p>
+                        <p class="text-sm text-gray-500" data-translate-key="phrase_nuki_de">例: Tamago nuki de (卵抜きで) / Without [Allergen], please.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center py-8 mt-8 border-t border-gray-200">
+            <p class="text-gray-500 text-sm">&copy; <span id="currentYear"></span> <span data-translate-key="store_name_footer">焼鳥うちわ</span>. All Rights Reserved.</p>
+            <p class="text-xs text-gray-400 mt-1" data-translate-key="qr_code_info">このメニューはQRコードからご覧いただけます。</p>
+        </footer>
+    </div>
+
+    <script>
+        const menuData = [
+            { category_ja: "おまかせ", category_en: "Omakase", category_ko: "오마카세", category_zh: "主厨精选", name_ja: "おまかせ 串十本コース", price: 2970, name_en: "Omakase 10-Skewer Course", name_ko: "오마카세 10꼬치 코스", name_zh: "主厨精选10串套餐", desc_ja: "おすすめの焼き鳥10本のコースです。（キャベツ・大根鬼おろし・種鶏ガラスープ付き）", desc_en: "Chef's recommendation course of 10 assorted skewers.(With cabbage, grated daikon radish, and chicken Bone Broth Soup)", desc_ko: "셰프 추천 꼬치 10개 코스입니다。(양배추·무우 오니시·종계 유리 쑥 첨부)", desc_zh: "主厨推荐的10串烤鸡肉串套餐。（包含卷心菜、萝卜丝、鸡汤）", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Omakase+Course" },
+            { category_ja: "鶏刺", category_en: "Chicken Sashimi", category_ko: "닭 사시미", category_zh: "鸡肉刺身", name_ja: "赤鶏ももタタキ", price: 880, name_en: "Red Chicken Thigh Tataki", name_ko: "붉닭 넓적다리 타타키", name_zh: "红鸡大腿肉轻烤", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Chicken+Tataki" },
+            { category_ja: "鶏刺", category_en: "Chicken Sashimi", category_ko: "닭 사시미", category_zh: "鸡肉刺身", name_ja: "赤鶏わさ", price: 880, name_en: "Red Chicken with Wasabi", name_ko: "붉닭 와사비", name_zh: "芥末红鸡", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Chicken+Wasabi" },
+            { category_ja: "一品", category_en: "A La Carte", category_ko: "일품 요리", category_zh: "単点", name_ja: "大根鬼おろし", price: 220, name_en: "Coarsely Grated Daikon Radish", name_ko: "무 오로시", name_zh: "萝卜泥", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Daikon+Oroshi" },
+            { category_ja: "一品", category_en: "A La Carte", category_ko: "일품 요리", category_zh: "単点", name_ja: "キャベツ", price: 330, name_en: "Cabbage", name_ko: "양배추", name_zh: "卷心菜", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Cabbage" },
+            { category_ja: "一品", category_en: "A La Carte", category_ko: "일품 요리", category_zh: "単点", name_ja: "厚揚げ", price: 418, name_en: "Thick Fried Tofu", name_ko: "두꺼운 유부", name_zh: "厚炸豆腐", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Atsuage" },
+            { category_ja: "一品", category_en: "A La Carte", category_ko: "일品 요리", category_zh: "単点", name_ja: "一人前サラダ", price: 440, name_en: "Single Serving Salad", name_ko: "1인분 샐러드", name_zh: "単人份沙拉", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Salad" },
+            { category_ja: "一品", category_en: "A La Carte", category_ko: "일品 요리", category_zh: "単点", name_ja: "トマトスライス", price: 440, name_en: "Tomato Slices", name_ko: "토마토 슬라이스", name_zh: "番茄片", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Tomato+Slices" },
+            { category_ja: "一品", category_en: "A La Carte", category_ko: "일品 요리", category_zh: "単点", name_ja: "冷奴", price: 440, name_en: "Chilled Tofu", name_ko: "히야얏코 (차가운 두부)", name_zh: "凉拌豆腐", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Chilled+Tofu" },
+            { category_ja: "一品", category_en: "A La Carte", category_ko: "일品 요리", category_zh: "単点", name_ja: "茶豆", price: 660, name_en: "Edamame (Brown soybeans)", name_ko: "차콩 (에다마메)", name_zh: "茶豆毛豆", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Edamame" },
+            { category_ja: "御飯物", category_en: "Rice Dishes", category_ko: "밥 요리", category_zh: "米饭类", name_ja: "種鶏がらスープ", price: 330, name_en: "Chicken Bone Broth Soup", name_ko: "닭뼈 육수 스프", name_zh: "鸡骨汤", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Chicken+Soup" },
+            { category_ja: "御飯物", category_en: "Rice Dishes", category_ko: "밥 요리", category_zh: "米饭类", name_ja: "塩おにぎり", price: 330, name_en: "Salted Rice Ball", name_ko: "소금 주먹밥", name_zh: "盐饭团", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Salted+Onigiri" },
+            { category_ja: "御飯物", category_en: "Rice Dishes", category_ko: "밥 요리", category_zh: "米饭类", name_ja: "焼きおにぎり", price: 440, name_en: "Grilled Rice Ball", name_ko: "구운 주먹밥", name_zh: "烤饭团", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Grilled+Onigiri" },
+            { category_ja: "御飯物", category_en: "Rice Dishes", category_ko: "밥 요리", category_zh: "米饭类", name_ja: "種鶏がら梅茶漬け", price: 770, name_en: "Chicken Broth & Plum Rice Soup (Ochazuke)", name_ko: "닭육수 매실 오차즈케", name_zh: "鸡汤梅子茶泡饭", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Ochazuke" },
+            { category_ja: "御飯物", category_en: "Rice Dishes", category_ko: "밥 요리", category_zh: "米饭类", name_ja: "焼鳥丼", price: 880, name_en: "Yakitori Rice Bowl", name_ko: "야키토리 덮밥", name_zh: "烤鸡肉串盖饭", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Yakitori+Don" },
+            { category_ja: "焼鳥串", category_en: "Chicken Skewers", category_ko: "닭꼬치", category_zh: "鸡肉串", name_ja: "レバー", price: 253, name_en: "Liver", name_ko: "간", name_zh: "鸡肝", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Liver" },
+            { category_ja: "焼鳥串", category_en: "Chicken Skewers", category_ko: "닭꼬치", category_zh: "鸡肉串", name_ja: "砂肝", price: 253, name_en: "Gizzard", name_ko: "모래주머니", name_zh: "鸡胗", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Gizzard" },
+            { category_ja: "焼鳥串", category_en: "Chicken Skewers", category_ko: "닭꼬치", category_zh: "鸡肉串", name_ja: "ハツ", price: 253, name_en: "Heart", name_ko: "염통", name_zh: "鸡心", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Heart" },
+            { category_ja: "焼鳥串", category_en: "Chicken Skewers", category_ko: "닭꼬치", category_zh: "鸡肉串", name_ja: "皮（塩・たれ）", price: 253, name_en: "Skin (Salt/Sauce)", name_ko: "껍질 (소금/양념)", name_zh: "鸡皮 (盐/酱)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Skin" },
+            { category_ja: "焼鳥串", category_en: "Chicken Skewers", category_ko: "닭꼬치", category_zh: "鸡肉串", name_ja: "ぼんじり", price: 253, name_en: "Tail", name_ko: "엉덩이살", name_zh: "鸡尾", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Tail" },
+            { category_ja: "焼鳥串", category_en: "Chicken Skewers", category_ko: "닭꼬치", category_zh: "鶏肉串", name_ja: "つくね", price: 275, name_en: "Chicken Meatball", name_ko: "츠쿠네 (닭고기 완자)", name_zh: "鸡肉丸", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Tsukune" },
+            { category_ja: "焼鳥串", category_en: "Chicken Skewers", category_ko: "닭꼬치", category_zh: "鶏肉串", name_ja: "ハラミ", price: 275, name_en: "Skirt Steak (Diaphragm)", name_ko: "하라미 (안창살)", name_zh: "横膈膜", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Harami" },
+            { category_ja: "焼鳥串", category_en: "Chicken Skewers", category_ko: "닭꼬치", category_zh: "鶏肉串", name_ja: "さび焼き", price: 275, name_en: "Lightly Grilled with Wasabi", name_ko: "사비야키 (와사비 살짝 구이)", name_zh: "芥末轻烤", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Sabi+Yaki" },
+            { category_ja: "焼鳥串", category_en: "Chicken Skewers", category_ko: "닭꼬치", category_zh: "鶏肉串", name_ja: "白玉", price: 275, name_en: "Quail Egg", name_ko: "메추리알", name_zh: "鹌鹑蛋", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Quail+Egg" },
+            { category_ja: "焼鳥串", category_en: "Chicken Skewers", category_ko: "닭꼬치", category_zh: "鶏肉串", name_ja: "ヤゲン軟骨", price: 275, name_en: "Keel Cartilage", name_ko: "가슴 연골", name_zh: "鸡胸软骨", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Cartilage" },
+            { category_ja: "焼鳥串", category_en: "Chicken Skewers", category_ko: "닭꼬치", category_zh: "鶏肉串", name_ja: "かしわ", price: 330, name_en: "Thigh Meat", name_ko: "카시와 (닭다리살)", name_zh: "鸡腿肉", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Kashiwa" },
+            { category_ja: "焼鳥串", category_en: "Chicken Skewers", category_ko: "닭꼬치", category_zh: "鶏肉串", name_ja: "せせり", price: 330, name_en: "Neck Meat", name_ko: "세세리 (목살)", name_zh: "鸡脖肉", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Seseri" },
+            { category_ja: "焼鳥串", category_en: "Chicken Skewers", category_ko: "닭꼬치", category_zh: "鶏肉串", name_ja: "ちょうちん", price: 330, name_en: "Lantern (Ovary with yolk)", name_ko: "초롱 (미성숙란과 난소)", name_zh: "灯笼 (卵巢与未成熟蛋黄)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Chochin" },
+            { category_ja: "焼鳥串", category_en: "Chicken Skewers", category_ko: "닭꼬치", category_zh: "鶏肉串", name_ja: "そり", price: 330, name_en: "Oyster (Thigh joint)", name_ko: "소리 (허벅지 관절살)", name_zh: "鸡生蚝 (大腿关节肉)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Sori" },
+            { category_ja: "焼鳥串", category_en: "Chicken Skewers", category_ko: "닭꼬치", category_zh: "鶏肉串", name_ja: "手羽先", price: 330, name_en: "Wing Tip", name_ko: "닭날개 끝", name_zh: "鸡翅尖", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Tebasaki" },
+            { category_ja: "焼鳥串", category_en: "Chicken Skewers", category_ko: "닭꼬치", category_zh: "鶏肉串", name_ja: "つなぎ", price: 330, name_en: "Connecting Part (Heart/Liver)", name_ko: "츠나기 (심장/간 연결부위)", name_zh: "连接部 (心/肝)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Tsunagi" },
+            { category_ja: "焼鳥串", category_en: "Chicken Skewers", category_ko: "닭꼬치", category_zh: "鶏肉串", name_ja: "ふりそで", price: 330, name_en: "Shoulder Meat", name_ko: "후리소데 (어깨살)", name_zh: "鸡肩肉", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Furisode" },
+            { category_ja: "焼鳥串", category_en: "Chicken Skewers", category_ko: "닭꼬치", category_zh: "鶏肉串", name_ja: "銀皮", price: 330, name_en: "Silver Skin (Gizzard lining)", name_ko: "은피 (모래주머니 내막)", name_zh: "银皮 (鸡胗内膜)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Ginpi" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "ズッキーニ", price: 253, name_en: "Zucchini", name_ko: "주키니", name_zh: "西葫芦", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Zucchini" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "エリンギ", price: 253, name_en: "King Oyster Mushroom", name_ko: "새송이버섯", name_zh: "杏鲍菇", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Eringi" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "アボカド", price: 253, name_en: "Avocado", name_ko: "아보카도", name_zh: "牛油果", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Avocado" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "ししとう", price: 253, name_en: "Shishito Pepper", name_ko: "꽈리고추", name_zh: "狮子唐辛子", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Shishito" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "里芋", price: 253, name_en: "Taro", name_ko: "토란", name_zh: "芋头", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Satoimo" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "じゃが芋", price: 253, name_en: "Potato", name_ko: "감자", name_zh: "土豆", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Potato" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "長芋", price: 253, name_en: "Nagaimo Yam", name_ko: "참마", name_zh: "长山药", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Nagaimo" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "レンコン", price: 275, name_en: "Lotus Root", name_ko: "연근", name_zh: "莲藕", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Lotus+Root" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "赤ナス", price: 275, name_en: "Red Eggplant", name_ko: "적가지", name_zh: "红茄子", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Red+Eggplant" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "オクラ", price: 275, name_en: "Okra", name_ko: "오크라", name_zh: "秋葵", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Okra" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "マッシュルーム", price: 275, name_en: "Mushroom", name_ko: "양송이버섯", name_zh: "蘑菇", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Mushroom" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "白ネギ", price: 275, name_en: "White Leek", name_ko: "흰대파", name_zh: "白葱", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=White+Leek" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "しいたけ", price: 330, name_en: "Shiitake Mushroom", name_ko: "표고버섯", name_zh: "香菇", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Shiitake" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "たまねぎ", price: 330, name_en: "Onion", name_ko: "양파", name_zh: "洋葱", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Onion" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "銀杏", price: 330, name_en: "Ginkgo Nut", name_ko: "은행", name_zh: "银杏", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Ginkgo+Nut" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "安納芋", price: 330, name_en: "Anno Sweet Potato", name_ko: "안노 고구마", name_zh: "安纳芋", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Anno+Imo" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "スナップエンドウ", price: 330, name_en: "Snap Pea", name_ko: "스냅 완두콩", name_zh: "荷兰豆", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Snap+Pea" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "トマトモッツアレラ", price: 440, name_en: "Tomato Mozzarella", name_ko: "토마토 모짜렐라", name_zh: "番茄马苏里拉奶酪", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Tomato+Mozzarella" },
+            { category_ja: "野菜串", category_en: "Vegetable Skewers", category_ko: "야채꼬치", category_zh: "蔬菜串", name_ja: "トウモロコシ", price: 440, name_en: "Corn", name_ko: "옥수수", name_zh: "玉米", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Corn" },
+            { category_ja: "変わり種串", category_en: "Special Skewers", category_ko: "특별 꼬치", category_zh: "特色串", name_ja: "合鴨", price: 495, name_en: "Duck", name_ko: "오리", name_zh: "鸭肉", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Duck" },
+            { category_ja: "変わり種串", category_en: "Special Skewers", category_ko: "특별 꼬치", category_zh: "特色串", name_ja: "生麩", price: 495, name_en: "Raw Wheat Gluten (Namafu)", name_ko: "생밀기울 (나마후)", name_zh: "生面筋", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Namafu" },
+            { category_ja: "変わり種串", category_en: "Special Skewers", category_ko: "특별 꼬치", category_zh: "特色串", name_ja: "カマンベールチーズ", price: 495, name_en: "Camembert Cheese", name_ko: "까망베르 치즈", name_zh: "卡门培尔奶酪", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Camembert+Cheese" },
+            { category_ja: "御飲物", sub_category_ja: "ソフトドリンク", sub_category_en: "Soft Drinks", sub_category_ko: "소프트 드링크", sub_category_zh: "软饮料", name_ja: "ウーロン茶", price: 440, name_en: "Oolong Tea", name_ko: "우롱차", name_zh: "乌龙茶", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Oolong+Tea" },
+            { category_ja: "御飲物", sub_category_ja: "ソフトドリンク", sub_category_en: "Soft Drinks", sub_category_ko: "소프트 ドリンク", sub_category_zh: "软饮料", name_ja: "コカ・コーラ", price: 440, name_en: "Coca-Cola", name_ko: "코카콜라", name_zh: "可口可乐", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Coca-Cola" },
+            { category_ja: "御飲物", sub_category_ja: "ソフトドリンク", sub_category_en: "Soft Drinks", sub_category_ko: "소프트 ドリンク", sub_category_zh: "软饮料", name_ja: "ジンジャーエール", price: 440, name_en: "Ginger Ale", name_ko: "진저에일", name_zh: "姜汁汽水", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Ginger+Ale" },
+            { category_ja: "御飲物", sub_category_ja: "ソフトドリンク", sub_category_en: "Soft Drinks", sub_category_ko: "소프트 ドリンク", sub_category_zh: "软饮料", name_ja: "オレンジ100％", price: 440, name_en: "Orange Juice 100%", name_ko: "오렌지 100%", name_zh: "100%橙汁", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Orange+Juice" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精饮料", name_ja: "オールフリー", price: 550, name_en: "All-Free (Non-alcoholic Beer)", name_ko: "올프리 (무알콜 맥주)", name_zh: "无酒精啤酒", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=All-Free" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精饮料", name_ja: "生ビール（サッポロ黒ラベル）", price: 660, name_en: "Draft Beer (Sapporo Black Label)", name_ko: "생맥주 (삿포로 블랙 라벨)", name_zh: "生啤酒 (札幌黑标)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Draft+Beer" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精饮料", name_ja: "生搾りサワー（レモン）", price: 660, name_en: "Fresh Squeezed Sour (Lemon)", name_ko: "생과일 사와 (레몬)", name_zh: "鲜榨酸酒 (柠檬)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Lemon+Sour" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精饮料", name_ja: "生搾りサワー（オレンジ）", price: 660, name_en: "Fresh Squeezed Sour (Orange)", name_ko: "생과일 사와 (오렌지)", name_zh: "鲜榨酸酒 (橙子)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Orange+Sour" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精饮料", name_ja: "焼酎（米：白岳・川辺）", price: 660, name_en: "Shochu (Rice: Hakutake, Kawabe)", name_ko: "소주 (쌀: 하쿠타케, 카와베)", name_zh: "烧酒 (米: 白岳, 川边)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Rice+Shochu" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精饮料", name_ja: "焼酎（麦：二階堂）", price: 660, name_en: "Shochu (Barley: Nikaido)", name_ko: "소주 (보리: 니카이도)", name_zh: "烧酒 (麦: 二阶堂)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Barley+Shochu" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精饮料", name_ja: "焼酎（芋：三岳・木挽ブルー）", price: 660, name_en: "Shochu (Sweet Potato: Mitake, Kobiki Blue)", name_ko: "소주 (고구마: 미타케, 코비키 블루)", name_zh: "烧酒 (薯: 三岳, 木挽蓝)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Potato+Shochu" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精饮料", name_ja: "ウィスキー（角）", price: 660, name_en: "Whiskey (Kaku)", name_ko: "위스키 (카쿠)", name_zh: "威士忌 (角牌)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Kaku+Whiskey" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精飲料", name_ja: "ウィスキー（デュワーズ）", price: 660, name_en: "Whiskey (Dewar's)", name_ko: "위스키 (듀어스)", name_zh: "威士忌 (帝王)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Dewars+Whiskey" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精飲料", name_ja: "ウィスキー（ジムビーム）", price: 660, name_en: "Whiskey (Jim Beam)", name_ko: "위스키 (짐빔)", name_zh: "威士忌 (占边)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Jim+Beam" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精飲料", name_ja: "ウィスキー（メーカーズマーク）", price: 660, name_en: "Whiskey (Maker's Mark)", name_ko: "위스키 (メーカースマーク)", name_zh: "威士忌 (美格)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Makers+Mark" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精飲料", name_ja: "ジンソーダ", price: 660, name_en: "Gin Soda", name_ko: "진소다", name_zh: "金汤力苏打", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Gin+Soda" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精飲料", name_ja: "瓶ビール（アサヒ）", price: 715, name_en: "Bottled Beer (Asahi)", name_ko: "병맥주 (아사히)", name_zh: "瓶装啤酒 (朝日)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Asahi+Beer" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精飲料", name_ja: "瓶ビール（キリン）", price: 715, name_en: "Bottled Beer (Kirin)", name_ko: "병맥주 (기린)", name_zh: "瓶装啤酒 (麒麟)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Kirin+Beer" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精飲料", name_ja: "瓶ビール（サッポロ）", price: 715, name_en: "Bottled Beer (Sapporo)", name_ko: "병맥주 (삿포로)", name_zh: "瓶装啤酒 (札幌)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Sapporo+Beer" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精飲料", name_ja: "梅酒", price: 715, name_en: "Plum Wine", name_ko: "매실주", name_zh: "梅酒", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Umeshu" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精飲料", name_ja: "ゆず酒", price: 715, name_en: "Yuzu Liqueur", name_ko: "유자술", name_zh: "柚子酒", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Yuzushu" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精飲料", name_ja: "生搾りサワー（グレープフルーツ）", price: 770, name_en: "Fresh Squeezed Sour (Grapefruit)", name_ko: "생과일 사와 (자몽)", name_zh: "鲜榨酸酒 (葡萄柚)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Grapefruit+Sour" },
+             { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精飲料", name_ja: "生搾りサワー（ビワミン）", price: 770, name_en: "Fresh Squeezed Sour (Biwamin - loquat based health drink)", name_ko: "생과일 사와 (비와민)", name_zh: "鲜榨酸酒 (枇杷明)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Biwamin+Sour" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精飲料", name_ja: "グラスワイン 赤", price: 770, name_en: "Glass Wine (Red)", name_ko: "글라스 와인 (레드)", name_zh: "杯装红葡萄酒", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Red+Wine" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精飲料", name_ja: "グラスワイン 白", price: 770, name_en: "Glass Wine (White)", name_ko: "글라스 와인 (화이트)", name_zh: "杯装白葡萄酒", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=White+Wine" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精飲料", name_ja: "ウィスキー（白州）", price: 1100, name_en: "Whiskey (Hakushu)", name_ko: "위스키 (하쿠슈)", name_zh: "威士忌 (白州)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Hakushu" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精飲料", name_ja: "ウィスキー（知多）", price: 1100, name_en: "Whiskey (Chita)", name_ko: "위스키 (치타)", name_zh: "威士忌 (知多)", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Chita" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精飲料", name_ja: "ボトルワイン", price: "時価", name_en: "Bottle Wine", name_ko: "병 와인", name_zh: "瓶装葡萄酒", note_ja: "スタッフにお尋ねください", note_en: "Ask staff", note_ko: "직원에게 문의하세요", note_zh: "请咨询服务员", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Bottle+Wine" },
+            { category_ja: "御飲物", sub_category_ja: "アルコール", sub_category_en: "Alcoholic Drinks", sub_category_ko: "주류", sub_category_zh: "酒精飲料", name_ja: "日本酒", price: "時価", name_en: "Sake", name_ko: "사케", name_zh: "日本酒", note_ja: "スタッフにお尋ねください", note_en: "Ask staff", note_ko: "직원에게 문의하세요", note_zh: "请咨询服务员", imageUrl: "https://placehold.co/100x100/E0E0E0/333333?text=Sake" },
+        ];
+
+        const translations = {
+            ja: {
+                store_name_logo: "焼鳥うちわ",
+                store_name_footer: "焼鳥うちわ",
+                lang_ja: "日本語", lang_en: "English", lang_ko: "한국어", lang_zh: "中文",
+                welcome_title: "焼鳥うちわへようこそ！",
+                welcome_message: "本格的な炭火焼き鳥と心温まるおもてなしでお客様をお迎えします。このデジタルメニューで、お好みの料理やドリンクを簡単に見つけていただけます。",
+                nav_omakase: "おまかせ", nav_food: "お食事", nav_drinks: "お飲物", nav_phrases: "役立つフレーズ",
+                omakase_title: "おまかせコース",
+                omakase_intro: "大将おすすめの串を厳選したお得なコースです。初めての方や、何を注文しようか迷っている方に最適です。",
+                food_title: "お食事",
+                food_cat_chicken_sashimi: "鶏刺(鶏の生ものが苦手な方は注意してください)", food_cat_a_la_carte: "一品", food_cat_skewers: "串物", food_cat_rice_dishes: "ご飯物",
+                skewers_intro: "当店自慢の新鮮な鶏肉や旬の野菜を使った串焼きの数々。塩またはタレでお楽しみください。同じ価格帯の串はまとめて表示しています。",
+                food_subcat_chicken_skewers: "鶏串", food_subcat_vegetable_skewers: "野菜串", food_subcat_special_skewers: "変わり種串",
+                drinks_title: "お飲物",
+                drinks_intro: "お食事に合う様々なドリンクをご用意しています。ソフトドリンクは同じ価格帯でまとめて表示しています。",
+                drinks_cat_soft_drinks: "ソフトドリンク", drinks_cat_alcoholic_drinks: "アルコール",
+                phrases_title: "役立つフレーズ",
+                phrases_intro: "ご注文やお会計の際に役立つ簡単な日本語フレーズです。スタッフとのコミュニケーションにお役立てください。",
+                phrase_kore_o_kudasai: "これをください / Can I have this?",
+                phrase_osusume: "おすすめは何ですか？ / What do you recommend?",
+                phrase_okaikei: "お会計をお願いします / Check, please.",
+                phrase_nuki_de: "例: Tamago nuki de (卵抜きで) / Without [Allergen], please.",
+                price_ask_staff: "時価 (スタッフにお尋ねください)",
+                qr_code_info: "このメニューはQRコードからご覧いただけます。",
+                items_in_group_skewers: "の串",
+                items_in_group_drinks: "のドリンク"
+            },
+            en: {
+                store_name_logo: "Yakitori UCHIWA",
+                store_name_footer: "Yakitori Uchiwa",
+                lang_ja: "日本語", lang_en: "English", lang_ko: "한국어", lang_zh: "中文",
+                welcome_title: "Welcome to Yakitori Uchiwa!",
+                welcome_message: "We welcome you with authentic charcoal-grilled yakitori and warm hospitality. Find your favorite dishes and drinks easily with this digital menu.",
+                nav_omakase: "Omakase", nav_food: "Food", nav_drinks: "Drinks", nav_phrases: "Useful Phrases",
+                omakase_title: "Omakase Course",
+                omakase_intro: "A great value course with carefully selected skewers recommended by our chef. Perfect for first-timers or those unsure what to order.",
+                food_title: "Food",
+                food_cat_chicken_sashimi: "Chicken Sashimi(If you don't like raw chicken, be careful.).", food_cat_a_la_carte: "A La Carte", food_cat_skewers: "Skewers", food_cat_rice_dishes: "Rice Dishes",
+                skewers_intro: "A variety of skewers using our prided fresh chicken and seasonal vegetables. Enjoy with salt or sauce. Skewers of the same price are grouped together.",
+                food_subcat_chicken_skewers: "Chicken Skewers", food_subcat_vegetable_skewers: "Vegetable Skewers", food_subcat_special_skewers: "Special Skewers",
+                drinks_title: "Drinks",
+                drinks_intro: "We offer a variety of drinks to accompany your meal. Soft drinks of the same price are grouped together.",
+                drinks_cat_soft_drinks: "Soft Drinks", drinks_cat_alcoholic_drinks: "Alcoholic Drinks",
+                phrases_title: "Useful Phrases",
+                phrases_intro: "Here are some simple Japanese phrases that may be helpful when ordering or paying. Please use them to communicate with our staff.",
+                phrase_kore_o_kudasai: "This one, please. /これをください。",
+                phrase_osusume: "What do you recommend? / おすすめは何ですか？",
+                phrase_okaikei: "Check, please. / お会計をお願いします。",
+                phrase_nuki_de: "e.g., Tamago nuki de (Without egg) / [Allergen]抜きでお願いします。",
+                price_ask_staff: "Market Price (Please ask staff)",
+                qr_code_info: "You can view this menu via QR code.",
+                items_in_group_skewers: " Skewers",
+                items_in_group_drinks: " Drinks"
+            },
+            ko: {
+                store_name_logo: "야키토리 우치와",
+                store_name_footer: "야키토리 우치와",
+                lang_ja: "日本語", lang_en: "English", lang_ko: "한국어", lang_zh: "中文",
+                welcome_title: "야키토리 우치와에 오신 것을 환영합니다!",
+                welcome_message: "정통 숯불 야키토리와 따뜻한 환대로 고객님을 맞이합니다. 이 디지털 메뉴로 좋아하는 요리와 음료를 쉽게 찾아보세요。",
+                nav_omakase: "오마카세", nav_food: "식사", nav_drinks: "음료", nav_phrases: "유용한 문구",
+                omakase_title: "오마카세 코스",
+                omakase_intro: "주방장이 추천하는 엄선된 꼬치로 구성된 실속 코스입니다. 처음 방문하시는 분이나 무엇을 주문할지 고민되시는 분들께 안성맞춤입니다.",
+                food_title: "식사",
+                food_cat_chicken_sashimi: "닭 사시미(닭고기 원료가 약한 사람은 조심하십시오.)", food_cat_a_la_carte: "일품 요리", food_cat_skewers: "꼬치 요리", food_cat_rice_dishes: "밥 요리",
+                skewers_intro: "저희 가게의 자랑인 신선한 닭고기와 제철 야채를 사용한 다양한 꼬치구이. 소금 또는 양념으로 즐기세요. 같은 가격대의 꼬치는 함께 표시됩니다.",
+                food_subcat_chicken_skewers: "닭꼬치", food_subcat_vegetable_skewers: "야채꼬치", food_subcat_special_skewers: "특별 꼬치",
+                drinks_title: "음료",
+                drinks_intro: "식사와 어울리는 다양한 음료를 준비했습니다. 같은 가격대의 소프트 드링크는 함께 표시됩니다.",
+                drinks_cat_soft_drinks: "소프트 드링크", drinks_cat_alcoholic_drinks: "주류",
+                phrases_title: "유용한 문구",
+                phrases_intro: "주문이나 계산 시 도움이 될 만한 간단한 일본어 문구입니다. 직원과의 의사소통에 활용해 보세요。",
+                phrase_kore_o_kudasai: "이것으로 주세요. / これをください。",
+                phrase_osusume: "추천 메뉴는 무엇인가요？ / おすすめは何ですか？",
+                phrase_okaikei: "계산서 주세요. / お会計をお願いします。",
+                phrase_nuki_de: "예: Tamago nuki de (계란 빼고) / [Allergen] 빼주세요。",
+                price_ask_staff: "싯가 (직원에게 문의)",
+                qr_code_info: "이 메뉴는 QR 코드를 통해 보실 수 있습니다。",
+                items_in_group_skewers: " 꼬치",
+                items_in_group_drinks: " 음료"
+            },
+            zh: {
+                store_name_logo: "烤鸡肉串UCHIWA",
+                store_name_footer: "烤鸡肉串Uchiwa",
+                lang_ja: "日本語", lang_en: "English", lang_ko: "한국어", lang_zh: "中文",
+                welcome_title: "欢迎光临烤鸡肉串Uchiwa！",
+                welcome_message: "我们以正宗的炭火烤鸡肉串和热情的款待迎接您的到来。通过此电子菜单，您可以轻松找到您喜欢的菜肴和饮品。",
+                nav_omakase: "主厨精选", nav_food: "餐饮", nav_drinks: "饮品", nav_phrases: "实用短语",
+                omakase_title: "主厨精选套餐",
+                omakase_intro: "由主厨精心挑选的超值烤串套餐。非常适合初次光临或不知如何选择的顾客。",
+                food_title: "餐饮",
+                food_cat_chicken_sashimi: "鸡肉刺身(如果您不喜欢生鸡肉，请小心。)", food_cat_a_la_carte: "単点", food_cat_skewers: "串烧", food_cat_rice_dishes: "米饭类",
+                skewers_intro: "使用本店引以为傲的新鲜鸡肉和时令蔬菜制作的各种串烧。可选择盐烧或酱烧。相同价位的串烧会集中显示。",
+                food_subcat_chicken_skewers: "鸡肉串", food_subcat_vegetable_skewers: "蔬菜串", food_subcat_special_skewers: "特色串",
+                drinks_title: "饮品",
+                drinks_intro: "我们提供各种与餐点搭配的饮品。相同价位的软饮料会集中显示。",
+                drinks_cat_soft_drinks: "软饮料", drinks_cat_alcoholic_drinks: "酒精饮料",
+                phrases_title: "实用短语",
+                phrases_intro: "这里有一些在点餐或结账时可能会用到的简单日语短语。请用它们与我们的工作人员交流。",
+                phrase_kore_o_kudasai: "请给我这个。/ これをください。",
+                phrase_osusume: "有什么推荐吗？/ おすすめは何ですか？",
+                phrase_okaikei: "买单。/ お会計をお願いします。",
+                phrase_nuki_de: "例如: Tamago nuki de (不要鸡蛋) / 请不要放[过敏原]。",
+                price_ask_staff: "时价 (请咨询服务员)",
+                qr_code_info: "您可以通过QR码查看此菜单。",
+                items_in_group_skewers: " 串",
+                items_in_group_drinks: " 饮品"
+            }
+        };
+
+        let currentLang = 'ja';
+
+        function getItemName(item) {
+            return item[`name_${currentLang}`] || item.name_ja;
+        }
+        
+        function getItemDesc(item) {
+            return item[`desc_${currentLang}`] || item.desc_ja || '';
+        }
+
+        function getItemNote(item) {
+            return item[`note_${currentLang}`] || item.note_ja || '';
+        }
+
+
+        function formatPrice(price) {
+            if (price === "時価" || price === "Market Price" || price === "싯가" || price === "时价") {
+                return translations[currentLang].price_ask_staff || price;
+            }
+            return `¥${price}`;
+        }
+
+        function createMenuItemHTML(item) {
+            const desc = getItemDesc(item);
+            const note = getItemNote(item);
+            const imageUrl = item.imageUrl;
+            return `
+                <div class="p-4 bg-white rounded-lg shadow price-group-item flex items-center space-x-4">
+                    ${imageUrl ? `<img src="${imageUrl}" alt="${getItemName(item)}" class="w-20 h-20 object-cover rounded-md" onerror="this.onerror=null;this.src='https://placehold.co/100x100/E0E0E0/333333?text=No+Image';">` : ''}
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-semibold text-gray-700">${getItemName(item)}</h4>
+                            <p class="text-lg font-bold lantern-red">${formatPrice(item.price)}</p>
+                        </div>
+                        ${desc ? `<p class="text-sm text-gray-500 mt-1">${desc}</p>` : ''}
+                        ${note ? `<p class="text-xs text-blue-500 mt-1">${note}</p>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Modified createPriceGroupAccordionHTML to accept itemType
+        function createPriceGroupAccordionHTML(price, items, lang, itemType) {
+            const groupId = `price-group-${price}-${Math.random().toString(36).substr(2, 5)}`;
+            let itemsHTML = items.map(item => {
+                 const desc = item[`desc_${lang}`] || item.desc_ja || '';
+                 const note = item[`note_${lang}`] || item.note_ja || '';
+                 const imageUrl = item.imageUrl;
+                 return `
+                    <div class="p-3 border-t border-gray-200 price-group-item flex items-center space-x-3">
+                        ${imageUrl ? `<img src="${imageUrl}" alt="${item[`name_${lang}`] || item.name_ja}" class="w-16 h-16 object-cover rounded-md" onerror="this.onerror=null;this.src='https://placehold.co/100x100/E0E0E0/333333?text=No+Image';">` : ''}
+                        <div>
+                            <p class="font-medium text-gray-700">${item[`name_${lang}`] || item.name_ja}</p>
+                            ${desc ? `<p class="text-xs text-gray-500 mt-0.5">${desc}</p>` : ''}
+                            ${note ? `<p class="text-xs text-blue-500 mt-0.5">${note}</p>` : ''}
+                        </div>
+                    </div>
+                 `;
+            }).join('');
+
+            const suffixKey = `items_in_group_${itemType}`; // 'items_in_group_skewers' or 'items_in_group_drinks'
+            const suffixText = translations[lang][suffixKey] || '';
+
+            return `
+                <div class="border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                    <button class="accordion-button w-full flex justify-between items-center p-4 bg-gray-50 hover:bg-gray-100 focus:outline-none" onclick="toggleAccordion(this)">
+                        <span class="font-semibold text-red-600" data-price="${price}">¥${price}${suffixText}</span>
+                        <svg class="w-5 h-5 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content bg-white">
+                        ${itemsHTML}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function toggleAccordion(buttonElement) {
+            buttonElement.classList.toggle('active');
+            const icon = buttonElement.querySelector('svg');
+            icon.classList.toggle('rotate-180');
+        }
+
+        function renderMenu() {
+            const omakaseContainer = document.getElementById('omakase-items');
+            const chickenSashimiContainer = document.getElementById('chicken-sashimi-items').querySelector('.space-y-3');
+            const aLaCarteContainer = document.getElementById('a-la-carte-items').querySelector('.space-y-3');
+            const specialSkewerContainer = document.getElementById('special-skewer-items');
+            const riceDishesContainer = document.getElementById('rice-dishes-items').querySelector('.space-y-3');
+            const alcoholicDrinksContainer = document.getElementById('alcoholic-drinks-items').querySelector('.space-y-3');
+            
+            const chickenSkewerPriceGroupContainer = document.getElementById('chicken-skewer-price-groups');
+            const vegetableSkewerPriceGroupContainer = document.getElementById('vegetable-skewer-price-groups');
+            const softDrinksPriceGroupContainer = document.getElementById('soft-drinks-price-groups').querySelector('.space-y-2');
+
+            omakaseContainer.innerHTML = '';
+            chickenSashimiContainer.innerHTML = '';
+            aLaCarteContainer.innerHTML = '';
+            specialSkewerContainer.innerHTML = '';
+            riceDishesContainer.innerHTML = '';
+            alcoholicDrinksContainer.innerHTML = '';
+            chickenSkewerPriceGroupContainer.innerHTML = '';
+            vegetableSkewerPriceGroupContainer.innerHTML = '';
+            softDrinksPriceGroupContainer.innerHTML = '';
+
+            const chickenSkewersByPrice = {};
+            const vegetableSkewersByPrice = {};
+            const softDrinksByPrice = {};
+
+            menuData.forEach(item => {
+                const categoryKey = `category_${currentLang}`;
+                const subCategoryKey = `sub_category_${currentLang}`;
+
+                if (item[categoryKey] === translations[currentLang].nav_omakase || item.category_ja === "おまかせ") {
+                    omakaseContainer.innerHTML += createMenuItemHTML(item);
+                } else if (item[categoryKey] === translations[currentLang].food_cat_chicken_sashimi || item.category_ja === "鶏刺") {
+                    chickenSashimiContainer.innerHTML += createMenuItemHTML(item);
+                } else if (item[categoryKey] === translations[currentLang].food_cat_a_la_carte || item.category_ja === "一品") {
+                    aLaCarteContainer.innerHTML += createMenuItemHTML(item);
+                } else if (item[categoryKey] === translations[currentLang].food_cat_rice_dishes || item.category_ja === "御飯物") {
+                    riceDishesContainer.innerHTML += createMenuItemHTML(item);
+                } else if (item[categoryKey] === translations[currentLang].food_subcat_special_skewers || item.category_ja === "変わり種串") {
+                    specialSkewerContainer.innerHTML += createMenuItemHTML(item);
+                } else if (item.category_ja === "焼鳥串") { // Use original Japanese category for logic
+                    if (!chickenSkewersByPrice[item.price]) chickenSkewersByPrice[item.price] = [];
+                    chickenSkewersByPrice[item.price].push(item);
+                } else if (item.category_ja === "野菜串") { // Use original Japanese category for logic
+                    if (!vegetableSkewersByPrice[item.price]) vegetableSkewersByPrice[item.price] = [];
+                    vegetableSkewersByPrice[item.price].push(item);
+                } else if (item.category_ja === "御飲物") { // Use original Japanese category for logic
+                    if (item.sub_category_ja === "ソフトドリンク") { // Use original Japanese sub-category for logic
+                         if (!softDrinksByPrice[item.price]) softDrinksByPrice[item.price] = [];
+                         softDrinksByPrice[item.price].push(item);
+                    } else {
+                        alcoholicDrinksContainer.innerHTML += createMenuItemHTML(item);
+                    }
+                }
+            });
+            
+            Object.keys(chickenSkewersByPrice).sort((a,b) => a-b).forEach(price => {
+                chickenSkewerPriceGroupContainer.innerHTML += createPriceGroupAccordionHTML(price, chickenSkewersByPrice[price], currentLang, 'skewers');
+            });
+            Object.keys(vegetableSkewersByPrice).sort((a,b) => a-b).forEach(price => {
+                vegetableSkewerPriceGroupContainer.innerHTML += createPriceGroupAccordionHTML(price, vegetableSkewersByPrice[price], currentLang, 'skewers');
+            });
+            Object.keys(softDrinksByPrice).sort((a,b) => a-b).forEach(price => {
+                softDrinksPriceGroupContainer.innerHTML += createPriceGroupAccordionHTML(price, softDrinksByPrice[price], currentLang, 'drinks');
+            });
+
+
+            // Translate static text
+            document.querySelectorAll('[data-translate-key]').forEach(el => {
+                const key = el.dataset.translateKey;
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    // Removed special handling for price_group_title as it's now handled in createPriceGroupAccordionHTML
+                    el.textContent = translations[currentLang][key];
+                }
+            });
+            
+            // Update active language button
+            document.querySelectorAll('.lang-button').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.classList.contains(currentLang)) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function switchLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            renderMenu();
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            const userLang = navigator.language || navigator.userLanguage;
+            if (userLang.startsWith('en')) {
+                currentLang = 'en';
+            } else if (userLang.startsWith('ko')) {
+                currentLang = 'ko';
+            } else if (userLang.startsWith('zh')) {
+                currentLang = 'zh';
+            } else {
+                currentLang = 'ja'; // Default
+            }
+            switchLanguage(currentLang);
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                         // Calculate offset considering sticky header and nav
+                        const headerHeight = document.querySelector('header').offsetHeight;
+                        const navHeight = document.querySelector('nav').offsetHeight;
+                        const offsetPosition = targetElement.offsetTop - headerHeight - navHeight;
+                        
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+
+    </script>
+</body>
+</html>
